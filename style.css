@@ -1,11 +1,11 @@
 @font-face {
   font-family: "LapisiaL-Regular";
-  src: url(/fonts/LapisiaL-Regular.woff) format("woff");
+  src: url(./fonts/LapisiaL-Regular.woff) format("woff");
 }
 
 @font-face {
   font-family: "Qoz-Regular";
-  src: url(/fonts/Qoz-Regular.woff) format("woff");
+  src: url(./fonts/Qoz-Regular.woff) format("woff");
 }
 
 body {
