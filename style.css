@@ -1,0 +1,58 @@
+@font-face {
+  font-family: "LapisiaL-Regular";
+  src: url(/fonts/LapisiaL-Regular.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Qoz-Regular";
+  src: url(/fonts/Qoz-Regular.woff) format("woff");
+}
+
+body {
+  font-size: 1.2em;
+  text-transform: uppercase;
+  font-family: LapisiaL-Regular;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid black;
+  text-align: center;
+  padding: 7px;
+  height: 50px;
+  width: 50px;
+}
+
+.selected {
+  background: #aaa;
+}
+
+.qoz {
+  font-size: 0.8em;
+  font-family: Qoz-Regular;
+}
+
+.color0 {
+  color: #C5B5A5;
+}
+.color1 {
+  color: #AA9988;
+}
+.color2 {
+  color: #FF6080;
+}
+.color3 {
+  color: #17AB39;
+}
+.color4 {
+  color: #AA88EE;
+}
+.color5 {
+  color: #FFAA00;
+}
+.color6 {
+  color: #B5B500;
+}

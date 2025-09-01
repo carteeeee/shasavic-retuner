@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <title>shasavic midi keyboard</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <button onclick="connect()">connect</button>
+    <select id="selector"></select>
+    <br>
+    <span>octave (arrow keys work too) </span>
+    <input type="number" value="3" id="octave">
+    <br>
+    <span>snap to octave</span>
+    <input type="checkbox" checked="true" id="snap">
+    <br/>
+    <a href="?1">1d (<span class="qoz color1">1</span>)</a>
+    <a href="?2">2d (<span class="qoz color2">2</span>)</a>
+    <a href="?3">3d (<span class="qoz color3">3</span>)</a>
+    <a href="?4">4d (<span class="qoz color4">4</span>)</a>
+    <a href="?5">5d (<span class="qoz color5">5</span>)</a>
+    <a href="?6">6d (<span class="qoz color6">6</span>)</a>
+    <br/><br/>
+    <table>
+      <tr class="t2">
+        <td class="t-5">1</td>
+        <td class="t-4">2</td>
+        <td class="t-3">3</td>
+        <td class="t-2">4</td>
+        <td class="t-1">5</td>
+        <td class="t0">6</td>
+        <td class="t1">7</td>
+        <td class="t2">8</td>
+        <td class="t3">9</td>
+        <td class="t4">0</td>
+      </tr>
+      <tr class="t1">
+        <td class="t-5">q</td>
+        <td class="t-4">w</td>
+        <td class="t-3">e</td>
+        <td class="t-2">r</td>
+        <td class="t-1">t</td>
+        <td class="t0">y</td>
+        <td class="t1">u</td>
+        <td class="t2">i</td>
+        <td class="t3">o</td>
+        <td class="t4">p</td>
+      </tr>
+      <tr class="t0">
+        <td class="t-5">a</td>
+        <td class="t-4">s</td>
+        <td class="t-3">d</td>
+        <td class="t-2">f</td>
+        <td class="t-1">g</td>
+        <td class="t0">h</td>
+        <td class="t1">j</td>
+        <td class="t2">k</td>
+        <td class="t3">l</td>
+        <td class="t4">;</td>
+      </tr>
+      <tr class="t-1">
+        <td class="t-5">z</td>
+        <td class="t-4">x</td>
+        <td class="t-3">c</td>
+        <td class="t-2">v</td>
+        <td class="t-1">b</td>
+        <td class="t0">n</td>
+        <td class="t1">m</td>
+        <td class="t2">,</td>
+        <td class="t3">.</td>
+        <td class="t4">/</td>
+      </tr>
+    </table>
+    <script defer src="/script.js"></script>
+  </body>
+</html>
