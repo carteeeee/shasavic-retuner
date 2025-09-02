@@ -111,9 +111,11 @@ function getBox(pos) {
 }
 
 function keydown(e) {
-  console.log(e.code);
   // ignore hotkeys such as ctrl+r to reload
   if (e.altKey || e.ctrlKey || e.metaKey)
+    return;
+  // ignore key repeats
+  if (e.repeat)
     return;
   
   // special handling to change octaves
