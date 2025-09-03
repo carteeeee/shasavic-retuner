@@ -1,16 +1,16 @@
 const selector = document.getElementById("selector");
+const bendrange = document.getElementById("bendrange");
+const aref = document.getElementById("aref");
+const ahref = document.getElementById("ahref");
 const octave = document.getElementById("octave");
 const snap = document.getElementById("snap");
-const aref = 440; // source A reference
 
-let playing = -1; // currently playing _midi note_
+let playing = -1; // currently playing midi note
 let playingKey = ""; // currently playing key code
 let access; // midi access
 
 const INTERVALS = [1, 2, 3/2, 5/4, 7/4, 11/4, 13/8];
 
-//const realbase = 261.63/8;
-const realbase = 289.56/8; // yxeni lol
 const horiz = 2;
 const vert = Number(window.location.search.slice(1));
 
@@ -86,16 +86,17 @@ function send(pitch) {
   if (playing !== -1)
     stop();
 
-  const note = 12 * getBaseLog(2, pitch / aref) + 69;
+  console.log(aref.value);
+  const note = 12 * getBaseLog(2, pitch / aref.value) + 69;
   const roundNote = Math.round(note);
-  const roundFreq = 2**((roundNote-69)/12)*aref;
+  const roundFreq = 2**((roundNote-69)/12)*aref.value;
   const difference = 12 * getBaseLog(2, pitch / roundFreq);
-  const fuckYouMidi = difference * 32;
-  console.log(pitch, difference);
+  const midibend = difference * (64 / bendrange.value);
+  console.log(pitch, difference, midibend);
 
   playing = roundNote;
   output.send([0x90, playing, 0x7f, // note on
-               0xE0, 0, Math.round(64 + fuckYouMidi)]); // pitch bend
+               0xE0, 0, Math.round(64 + midibend)]); // pitch bend
 }
 
 function stop() {
@@ -133,7 +134,7 @@ function keydown(e) {
 
   playingKey = e.code;
   const pos = keys[e.code];
-  const base = realbase * (2 ** octave.value);
+  const base = ahref.value * (2 ** octave.value);
   let pitch = base * (INTERVALS[horiz] ** pos[0]) * (INTERVALS[vert] ** pos[1]);
 
   // snap to octave (please tell me there's a better way to do this)
