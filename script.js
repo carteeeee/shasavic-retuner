@@ -86,17 +86,16 @@ function send(pitch) {
   if (playing !== -1)
     stop();
 
-  console.log(aref.value);
   const note = 12 * getBaseLog(2, pitch / aref.value) + 69;
   const roundNote = Math.round(note);
   const roundFreq = 2**((roundNote-69)/12)*aref.value;
   const difference = 12 * getBaseLog(2, pitch / roundFreq);
-  const midibend = difference * (64 / bendrange.value);
+  const midibend = Math.round(difference * (8192 / bendrange.value) + 8192);
   console.log(pitch, difference, midibend);
 
   playing = roundNote;
-  output.send([0x90, playing, 0x7f, // note on
-               0xE0, 0, Math.round(64 + midibend)]); // pitch bend
+  output.send([0xE0, midibend & 0b1111111, midibend >> 7, // pitch bend
+               0x90, playing, 0x7f]); // note on
 }
 
 function stop() {
