@@ -1,15 +1,21 @@
 const selector = document.getElementById("selector");
+const poly = document.getElementById("poly");
 const bendrange = document.getElementById("bendrange");
 const aref = document.getElementById("aref");
 const ahref = document.getElementById("ahref");
 const octave = document.getElementById("octave");
 const snap = document.getElementById("snap");
 
+const defaultchannel = {bend: 8192, time: -1, playing: -1, used: false};
+// whgatever tf this is prevents js from linking everything to the same object
+let channelusage = Array.from({length: 16}, ()=>({...defaultchannel}));
+let polyplaying = {}; // code: channel number
+
 let playing = -1; // currently playing midi note
 let playingKey = ""; // currently playing key code
 let access; // midi access
 
-const INTERVALS = [1, 2, 3/2, 5/4, 7/4, 11/4, 13/8];
+const INTERVALS = [1, 2, 3/2, 5/4, 7/4, 11/4, 13/4];
 
 const horiz = 2;
 const vert = Number(window.location.search.slice(1));
@@ -80,11 +86,11 @@ function connect() {
   });
 }
 
-function send(pitch) {
+function send(pitch, code) {
   const output = access.outputs.get(selector.value);
   
   if (playing !== -1)
-    stop();
+    stop("");
 
   const note = 12 * getBaseLog(2, pitch / aref.value) + 69;
   const roundNote = Math.round(note);
@@ -93,16 +99,61 @@ function send(pitch) {
   const midibend = Math.round(difference * (8192 / bendrange.value) + 8192);
   console.log(pitch, difference, midibend);
 
-  playing = roundNote;
-  output.send([0xE0, midibend & 0b1111111, midibend >> 7, // pitch bend
-               0x90, playing, 0x7f]); // note on
+  let chan = -1;
+  if (poly.checked) {
+    let oldest = Date.now();
+    for (let i = 0; i < channelusage.length; i++) {
+      const channel = channelusage[i];
+      if (channel.used) continue;
+      if (channel.time === -1 || channel.bend == midibend) {
+        // perfect scenario
+        chan = i;
+        break;
+      }
+      // good candidate but not perfect, keep going to possibly find more
+      if (channel.time < oldest)
+        chan = i;
+    }
+
+    if (chan === -1) return;
+    channelusage[chan].used = true;
+    channelusage[chan].playing = roundNote;
+    channelusage[chan].bend = midibend;
+    channelusage[chan].time = Date.now();
+    polyplaying[code] = chan;
+  } else {
+    chan = 0;
+    playing = roundNote;
+  }
+
+  output.send([0xE0 | chan, midibend & 0b1111111, midibend >> 7, // pitch bend
+               0x90 | chan, roundNote, 0x7f]); // note on
 }
 
-function stop() {
+function stop(code) {
   const output = access.outputs.get(selector.value);
-  if (playing !== -1) {
-    output.send([0x80, playing, 0x7f]);
-    playing = -1;
+
+  if (poly.checked && code !== "") {
+    const chan = polyplaying[code];
+    output.send([0x80 | chan, channelusage[chan].playing, 0x7f]);
+    channelusage[chan].playing = -1;
+    channelusage[chan].used = false;
+    console.log(polyplaying);
+    delete polyplaying[code];
+  } else {
+    if (playing !== -1) {
+      output.send([0x80, playing, 0x7f]);
+      playing = -1;
+    }
+  }
+}
+
+// this function stops everything
+function ohshit() {
+  for (const [code, chan] of Object.entries(polyplaying)) {
+    stop(code);
+    const pos = keys[code];
+    getBox(pos).classList.remove("selected");
   }
 }
 
@@ -116,6 +167,9 @@ function keydown(e) {
     return;
   // ignore key repeats
   if (e.repeat)
+    return;
+  // ignore keys already playing
+  if (e.code in polyplaying)
     return;
   
   // special handling to change octaves
@@ -145,7 +199,7 @@ function keydown(e) {
   }
 
   getBox(pos).classList.add("selected");
-  send(pitch);
+  send(pitch, e.code);
 }
 
 function keyup(e) {
@@ -162,8 +216,8 @@ function keyup(e) {
   const pos = keys[e.code];
   getBox(pos).classList.remove("selected");
 
-  if (playingKey == e.code)
-    stop();
+  if (poly.checked || playingKey == e.code)
+    stop(e.code);
 }
 
 function addnames() {
