@@ -38,4 +38,4 @@ for anything not mentioned here feel free to dm me on discord!
 ## todo
 - [x] basic functionality
 - [x] de-hardcode a lot of settings (such as bend range, A4 ref, Ah ref, etc)
-- [ ] polyphony!
+- [x] polyphony!
