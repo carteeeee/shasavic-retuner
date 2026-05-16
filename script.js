@@ -8,7 +8,7 @@ const snap = document.getElementById("snap");
 
 const defaultchannel = {bend: 8192, time: -1, playing: -1, used: false};
 // whgatever tf this is prevents js from linking everything to the same object
-let channelusage = Array.from({length: 16}, ()=>({...defaultchannel}));
+let channelusage = Array.from({length: 15}, ()=>({...defaultchannel}));
 let polyplaying = {}; // code: channel number
 
 let playing = -1; // currently playing midi note
