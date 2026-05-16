@@ -1,4 +1,5 @@
 const selector = document.getElementById("selector");
+const pop = document.getElementById("pop");
 const poly = document.getElementById("poly");
 const bendrange = document.getElementById("bendrange");
 const aref = document.getElementById("aref");
@@ -8,7 +9,7 @@ const snap = document.getElementById("snap");
 
 const defaultchannel = {bend: 8192, time: -1, playing: -1, used: false};
 // whgatever tf this is prevents js from linking everything to the same object
-let channelusage = Array.from({length: 15}, ()=>({...defaultchannel}));
+let channelusage = Array.from({length: 16}, ()=>({...defaultchannel}));
 let polyplaying = {}; // code: channel number
 
 let playing = -1; // currently playing midi note
@@ -104,6 +105,7 @@ function send(pitch, code) {
     let oldest = Date.now();
     for (let i = 0; i < channelusage.length; i++) {
       const channel = channelusage[i];
+      if (pop.checked && i == 9) continue;
       if (channel.used) continue;
       if (channel.time === -1 || channel.bend == midibend) {
         // perfect scenario
